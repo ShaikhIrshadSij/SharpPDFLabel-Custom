@@ -160,12 +160,25 @@ namespace SharpPDFLabel
 
                             if (_images.Count > totalCount)
                             {
+                                float[] pointColumnWidths2 = { 150f, 150f };
+                                PdfPTable nested = new PdfPTable(pointColumnWidths2); // new line added 
+                                var imageCell = new PdfPCell();
+                                var fontCell = new PdfPCell();
                                 var pdfImg = iTextSharp.text.Image.GetInstance(_images[totalCount]);
-                                cell.Colspan = 2; 
-                                cell.AddElement(new Chunk(pdfImg, 0, 0, true));
+
+                                imageCell.AddElement(new Chunk(pdfImg, 0, 0, true));
+                                imageCell.FixedHeight = _label.Height;
+                                imageCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                imageCell.Border = Rectangle.NO_BORDER;
+                                nested.AddCell(imageCell);
+
                                 var font = FontFactory.GetFont(_textChunks[totalCount].FontName, BaseFont.CP1250, _textChunks[totalCount].EmbedFont, _textChunks[totalCount].FontSize, _textChunks[totalCount].FontStyle);
-                                cell.AddElement(new Chunk(_textChunks[totalCount].Text, font));
-                                //cell.AddElement(new Chunk(_textChunks[totalCount + 1].Text, font));
+                                fontCell.AddElement(new Chunk(_textChunks[totalCount].Text, font));
+                                fontCell.AddElement(new Chunk(_textChunks[totalCount + 1].Text, font));
+                                fontCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                fontCell.Border = Rectangle.NO_BORDER;
+                                nested.AddCell(fontCell);
+                                cell.AddElement(nested);
 
                                 //Ensure our label height is adhered to
                                 cell.FixedHeight = _label.Height;
