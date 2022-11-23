@@ -1,0 +1,11 @@
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\obj\Debug\SharpPDFLabel.csproj.AssemblyReference.cache
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\obj\Debug\SharpPDFLabel.csproj.CoreCompileInputs.cache
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\bin\Debug\SharpPDFLabel.exe.config
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\bin\Debug\SharpPDFLabel.exe
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\bin\Debug\SharpPDFLabel.pdb
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\bin\Debug\BouncyCastle.Crypto.dll
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\bin\Debug\itextsharp.dll
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\bin\Debug\itextsharp.xml
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\obj\Debug\SharpPDFLabel.csproj.CopyComplete
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\obj\Debug\SharpPDFLabel.exe
+E:\Irshad\SharpPDFLabel\SharpPDFLabel\obj\Debug\SharpPDFLabel.pdb
