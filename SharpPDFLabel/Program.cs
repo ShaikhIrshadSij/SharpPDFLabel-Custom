@@ -14,10 +14,11 @@ namespace SharpPDFLabel
             label.LabelRowsPerPage = 10;
             // Create a LabelCreator, passing the required label
             var labelCreator = new SharpPDFLabel.LabelCreator(label);
-            var myImageAsAStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes("C:\\Users\\Vision-039\\Pictures\\Screenpresso\\2022-10-17_11h51_16.png"));
+            var myImageAsAStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes("E:\\0caf54ae-3e7d-4e5a-9656-85e75edddd26.png"));
             labelCreator.AddImage(myImageAsAStream);
-            labelCreator.AddText("Some Text", "Verdana", 10, embedFont: true);
-            labelCreator.AddText("Some more text with bold and underlined text", "Verdana", 10, true, SharpPDFLabel.Enums.FontStyle.BOLD, SharpPDFLabel.Enums.FontStyle.UNDERLINE);
+            labelCreator.AddText("Stripe No. 8 - CO101310 COLOR: Prussian Blue LOR: Prussian Blue", "Verdana", 7, embedFont: true);
+            labelCreator.AddText("Philomela Philomela Philomela", "Verdana", 6, embedFont: true);
+            labelCreator.AddText("Scan for product details and to quote, order or save.", "Verdana", 6, true, Enums.FontStyle.BOLD);
             labelCreator.IncludeLabelBorders = true;
 
             //Create the PDF as a stream

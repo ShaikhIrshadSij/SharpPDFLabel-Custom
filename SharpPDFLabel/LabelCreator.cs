@@ -5,6 +5,8 @@ using System.Text;
 using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using SharpPDFLabel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SharpPDFLabel
 {
@@ -143,6 +145,7 @@ namespace SharpPDFLabel
             //Set the column widths (in points) - take note of the size parameter mentioned above
             tbl.SetWidthPercentage(colWidths.ToArray(), size);
             var totalCount = 0;
+            var labelCount = 0;
             //Create the rows for the table
             for (int iRow = 0; iRow < _label.LabelRowsPerPage; iRow++)
             {
@@ -160,21 +163,37 @@ namespace SharpPDFLabel
 
                             if (_images.Count > totalCount)
                             {
-                                float[] pointColumnWidths2 = { 150f, 150f };
+                                float[] pointColumnWidths2 = { 120f, 200f };
                                 PdfPTable nested = new PdfPTable(pointColumnWidths2); // new line added 
                                 var imageCell = new PdfPCell();
                                 var fontCell = new PdfPCell();
                                 var pdfImg = iTextSharp.text.Image.GetInstance(_images[totalCount]);
 
-                                imageCell.AddElement(new Chunk(pdfImg, 0, 0, true));
+                                imageCell.AddElement(new Chunk(pdfImg, -20, 0, true));
                                 imageCell.FixedHeight = _label.Height;
                                 imageCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                                imageCell.VerticalAlignment = Element.ALIGN_LEFT;
                                 imageCell.Border = Rectangle.NO_BORDER;
+
                                 nested.AddCell(imageCell);
 
-                                var font = FontFactory.GetFont(_textChunks[totalCount].FontName, BaseFont.CP1250, _textChunks[totalCount].EmbedFont, _textChunks[totalCount].FontSize, _textChunks[totalCount].FontStyle);
-                                fontCell.AddElement(new Chunk(_textChunks[totalCount].Text, font));
-                                fontCell.AddElement(new Chunk(_textChunks[totalCount + 1].Text, font));
+                                var textLine1 = _textChunks[labelCount].Text;
+                                if (textLine1.Length > 45)
+                                {
+                                    textLine1 = textLine1.Substring(0, 45) + "...";
+                                }
+
+                                var textLine2 = _textChunks[labelCount + 1].Text;
+                                if (textLine2.Length > 25)
+                                {
+                                    textLine2 = textLine2.Substring(0, 25) + "...";
+                                }
+                                var textLine3 = _textChunks[labelCount + 2].Text;
+
+                                fontCell.AddElement(new Chunk(textLine1, FontFactory.GetFont(_textChunks[labelCount].FontName, BaseFont.CP1250, _textChunks[labelCount].EmbedFont, _textChunks[labelCount].FontSize, _textChunks[labelCount].FontStyle)));
+                                fontCell.AddElement(new Chunk(textLine2, FontFactory.GetFont(_textChunks[labelCount + 1].FontName, BaseFont.CP1250, _textChunks[labelCount + 1].EmbedFont, _textChunks[labelCount + 1].FontSize, _textChunks[labelCount + 1].FontStyle)));
+                                fontCell.AddElement(new Chunk(textLine3, FontFactory.GetFont(_textChunks[labelCount + 2].FontName, BaseFont.CP1250, _textChunks[labelCount + 2].EmbedFont, _textChunks[labelCount + 2].FontSize, _textChunks[labelCount + 2].FontStyle)));
+
                                 fontCell.HorizontalAlignment = Element.ALIGN_LEFT;
                                 fontCell.Border = Rectangle.NO_BORDER;
                                 nested.AddCell(fontCell);
@@ -184,14 +203,16 @@ namespace SharpPDFLabel
                                 cell.FixedHeight = _label.Height;
 
                                 //Centre align the content
-                                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                cell.HorizontalAlignment = Element.ALIGN_LEFT;
 
                                 cell.Border = IncludeLabelBorders ? Rectangle.BOX : Rectangle.NO_BORDER;
                             }
 
                             //Add to the row
                             rowCells.Add(cell);
-
+                            labelCount++;
+                            labelCount++;
+                            labelCount++;
                             totalCount++;
                         }
                         else
