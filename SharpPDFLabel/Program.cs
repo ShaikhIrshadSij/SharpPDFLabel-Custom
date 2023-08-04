@@ -10,25 +10,46 @@ namespace SharpPDFLabel
         {
             // Create the required label
             var label = new SharpPDFLabel.Labels.A4Labels.Avery.L5160();
-            label.LabelsPerRow = 3;
-            label.LabelRowsPerPage = 10;
+            label.LabelsPerRow = 2;
+            label.LabelRowsPerPage = 5;
             // Create a LabelCreator, passing the required label
             var labelCreator = new SharpPDFLabel.LabelCreator(label);
-            var myImageAsAStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes("E:\\0caf54ae-3e7d-4e5a-9656-85e75edddd26.png"));
-            labelCreator.AddImage(myImageAsAStream);
-            labelCreator.AddText("Stripe No. 8 - CO101310 COLOR: Prussian Blue LOR: Prussian Blue", "Verdana", 7, embedFont: true);
-            labelCreator.AddText("Philomela Philomela Philomela", "Verdana", 6, embedFont: true);
-            labelCreator.AddText("Scan for product details and to quote, order or save.", "Verdana", 6, true, Enums.FontStyle.BOLD);
+
+            AddRow(ref labelCreator);
+            AddRow(ref labelCreator);
+            AddRow(ref labelCreator);
+            AddRow(ref labelCreator);
+            AddRow(ref labelCreator);
+            AddRow(ref labelCreator);
+
+
             labelCreator.IncludeLabelBorders = true;
 
             //Create the PDF as a stream
             var pdfStream = labelCreator.CreatePDF();
             SaveFileStream("E:\\Demo\\Sample.pdf", pdfStream);
             Console.WriteLine("PDF Generated");
-            Console.ReadKey();
+            //Console.ReadKey();
             //Do something with it!
             //Response.AddHeader("Content-Disposition", "attachment; filename=sheet_of_labels.pdf");
             //return new FileStreamResult(pdfStream, "application/pdf");
+        }
+
+        private static void AddRow(ref LabelCreator labelCreator)
+        {
+            labelCreator.AddImage(new System.IO.MemoryStream(System.IO.File.ReadAllBytes("D:\\Irshad\\SharpPDFLabel-Custom\\SharpPDFLabel\\Images\\IMG-20230722-WA0038.jpg")));
+            labelCreator.AddText("Shaikh Irshad", "Verdana", 8, embedFont: true, Enums.FontStyle.BOLD);
+            labelCreator.AddText("S/O: Jahangir", "Verdana", 7, embedFont: true);
+            labelCreator.AddText("148-A-24, H-2, Near Amroli, Surat, Gujarat", "Verdana", 7, true);
+            labelCreator.AddText("Mo: 98980-33490", "Verdana", 7, true);
+            labelCreator.AddText("Aadhar: xxxx-xxxx-9901", "Verdana", 6, true);
+
+            labelCreator.AddImage(new System.IO.MemoryStream(System.IO.File.ReadAllBytes("D:\\Irshad\\SharpPDFLabel-Custom\\SharpPDFLabel\\Images\\th.jpg")));
+            labelCreator.AddText("Member Since: 2021", "Verdana", 7, embedFont: true);
+            labelCreator.AddText("Work Type: NREGAWorker", "Verdana", 7, embedFont: true);
+            labelCreator.AddText("Ration Card No: 34901939483", "Verdana", 7, true);
+            labelCreator.AddText("Job Card No: 9012984911", "Verdana", 7, true);
+            labelCreator.AddText("Printed: 2023-03-15, manmudra.org", "Verdana", 6, true);
         }
 
         private static void SaveFileStream(string path, Stream stream)

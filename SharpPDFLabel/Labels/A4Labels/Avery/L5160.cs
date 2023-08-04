@@ -12,9 +12,9 @@ namespace SharpPDFLabel.Labels.A4Labels.Avery
     {
         public L5160()
         {
-            _Width = 66.675;
-            _Height = 25.4;
-            _HorizontalGapWidth = 3.175;
+            _Width = 80;
+            _Height = 49;
+            _HorizontalGapWidth = 0;
             _VerticalGapHeight = 0;
 
             _PageMarginTop = 12.7;

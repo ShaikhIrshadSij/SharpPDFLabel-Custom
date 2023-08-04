@@ -7,6 +7,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using SharpPDFLabel;
 using static System.Net.Mime.MediaTypeNames;
+using System.Xml.Linq;
 
 namespace SharpPDFLabel
 {
@@ -163,41 +164,66 @@ namespace SharpPDFLabel
 
                             if (_images.Count > totalCount)
                             {
-                                float[] pointColumnWidths2 = { 120f, 200f };
-                                PdfPTable nested = new PdfPTable(pointColumnWidths2); // new line added 
+                                var backSide = (totalCount + 1) % 2 != 1;
+
+                                PdfPTable frontMainTable = new PdfPTable(1);
+
+                                if (!backSide)
+                                {
+
+                                    frontMainTable.WidthPercentage = 100;
+
+                                    PdfPTable mainTable = new PdfPTable(1);
+                                    mainTable.WidthPercentage = 100;
+                                    var mainTextCell = new PdfPCell();
+
+                                    mainTextCell.AddElement(new Chunk("Rajasthan Asangathit Mazdoor Union", FontFactory.GetFont("Verdana", BaseFont.CP1250, true, 8, (int)Enums.FontStyle.BOLD)));
+                                    mainTextCell.AddElement(new Chunk("Devdoongri, Bhim, Distt: xxxx, Rajasthan", FontFactory.GetFont("Verdana", BaseFont.CP1250, true, 7)));
+                                    mainTextCell.AddElement(new Chunk("Regd. No. RTU-6/2018, Ph: 93909-93890, E: ramu@gmail.com", FontFactory.GetFont("Verdana", BaseFont.CP1250, true, 7)));
+                                    mainTextCell.Border = Rectangle.NO_BORDER;
+                                    mainTable.AddCell(mainTextCell);
+                                    frontMainTable.AddCell(mainTable);
+
+                                }
+
+                                float[] pointColumnWidths2 = { 100f, 200f };
+                                PdfPTable nested = backSide ? new PdfPTable(pointColumnWidths2) : new PdfPTable(pointColumnWidths2); // new line added
                                 var imageCell = new PdfPCell();
                                 var fontCell = new PdfPCell();
                                 var pdfImg = iTextSharp.text.Image.GetInstance(_images[totalCount]);
+                                if (backSide)
+                                {
+                                    pdfImg.ScaleAbsoluteWidth(60);
+                                    pdfImg.ScaleAbsoluteHeight(60);
+                                }
 
-                                imageCell.AddElement(new Chunk(pdfImg, -20, 0, true));
+                                imageCell.AddElement(new Chunk(pdfImg, backSide ? -20 : 0, 0, true));
                                 imageCell.FixedHeight = _label.Height;
                                 imageCell.HorizontalAlignment = Element.ALIGN_LEFT;
                                 imageCell.VerticalAlignment = Element.ALIGN_LEFT;
                                 imageCell.Border = Rectangle.NO_BORDER;
 
                                 nested.AddCell(imageCell);
-
-                                var textLine1 = _textChunks[labelCount].Text;
-                                if (textLine1.Length > 45)
+                                for (int i = labelCount; i < labelCount + 5; i++)
                                 {
-                                    textLine1 = textLine1.Substring(0, 45) + "...";
+                                    var _text = _textChunks[i];
+                                    var chunk = new Chunk(_text.Text, FontFactory.GetFont(_text.FontName, BaseFont.CP1250, _text.EmbedFont, _text.FontSize, _text.FontStyle));
+                                    fontCell.AddElement(chunk);
                                 }
-
-                                var textLine2 = _textChunks[labelCount + 1].Text;
-                                if (textLine2.Length > 25)
-                                {
-                                    textLine2 = textLine2.Substring(0, 25) + "...";
-                                }
-                                var textLine3 = _textChunks[labelCount + 2].Text;
-
-                                fontCell.AddElement(new Chunk(textLine1, FontFactory.GetFont(_textChunks[labelCount].FontName, BaseFont.CP1250, _textChunks[labelCount].EmbedFont, _textChunks[labelCount].FontSize, _textChunks[labelCount].FontStyle)));
-                                fontCell.AddElement(new Chunk(textLine2, FontFactory.GetFont(_textChunks[labelCount + 1].FontName, BaseFont.CP1250, _textChunks[labelCount + 1].EmbedFont, _textChunks[labelCount + 1].FontSize, _textChunks[labelCount + 1].FontStyle)));
-                                fontCell.AddElement(new Chunk(textLine3, FontFactory.GetFont(_textChunks[labelCount + 2].FontName, BaseFont.CP1250, _textChunks[labelCount + 2].EmbedFont, _textChunks[labelCount + 2].FontSize, _textChunks[labelCount + 2].FontStyle)));
 
                                 fontCell.HorizontalAlignment = Element.ALIGN_LEFT;
                                 fontCell.Border = Rectangle.NO_BORDER;
                                 nested.AddCell(fontCell);
-                                cell.AddElement(nested);
+
+                                if (backSide)
+                                {
+                                    cell.AddElement(nested);
+                                }
+                                else
+                                {
+                                    frontMainTable.AddCell(nested);
+                                    cell.AddElement(frontMainTable);
+                                }
 
                                 //Ensure our label height is adhered to
                                 cell.FixedHeight = _label.Height;
@@ -205,14 +231,11 @@ namespace SharpPDFLabel
                                 //Centre align the content
                                 cell.HorizontalAlignment = Element.ALIGN_LEFT;
 
-                                cell.Border = IncludeLabelBorders ? Rectangle.BOX : Rectangle.NO_BORDER;
                             }
 
                             //Add to the row
                             rowCells.Add(cell);
-                            labelCount++;
-                            labelCount++;
-                            labelCount++;
+                            labelCount += 5;
                             totalCount++;
                         }
                         else
